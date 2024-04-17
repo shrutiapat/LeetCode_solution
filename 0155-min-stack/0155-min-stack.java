@@ -1,25 +1,39 @@
 class MinStack {
-    int min = Integer.MAX_VALUE;
-    Stack<Integer> stack = new Stack<Integer>();
-    public void push(int x) {
-        
-        if(x <= min){          
-            stack.push(min);
-            min=x;
+    LinkedList<TplusMin> stack;
+    private class TplusMin {
+        int val;
+        int min;
+        public TplusMin(int val, int min) {
+            this.val = val;
+            this.min = min;
         }
-        stack.push(x);
     }
 
+    public MinStack() {
+        stack = new LinkedList<>();
+    }
+    
+    public void push(int val) {
+        int newMin;
+        if (stack.size() == 0){
+            newMin = val;
+        }
+        else {
+            int currentMin = stack.getFirst().min;
+            newMin = val < currentMin ? val : currentMin;
+        }
+        stack.addFirst(new TplusMin(val, newMin));
+    }
+    
     public void pop() {
-       
-        if(stack.pop() == min) min=stack.pop();
+        stack.removeFirst();
     }
-
+    
     public int top() {
-        return stack.peek();
+        return stack.peekFirst().val;
     }
-
+    
     public int getMin() {
-        return min;
+        return stack.peekFirst().min;
     }
 }
