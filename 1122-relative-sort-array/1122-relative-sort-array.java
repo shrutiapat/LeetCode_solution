@@ -1,19 +1,33 @@
 class Solution {
     public int[] relativeSortArray(int[] arr1, int[] arr2) {
-        TreeMap<Integer, Integer> map = new TreeMap<>();
-        for(int n : arr1) map.put(n, map.getOrDefault(n, 0) + 1);
+        // Step 1: Initialize a frequency array
+        int[] cnt = new int[1001];
+        for (int i : arr1) {
+            cnt[i]++;
+        }
+        
+        // Step 2: Initialize the result array
+        int[] ans = new int[arr1.length];
         int i = 0;
-        for(int n : arr2) {
-            for(int j = 0; j < map.get(n); j++) {
-                arr1[i++] = n;
-            }
-            map.remove(n);
-        }
-        for(int n : map.keySet()){
-            for(int j = 0; j < map.get(n); j++) {
-                arr1[i++] = n;
+        
+        // Step 3: Place elements of arr2 into the result array
+        for (int n : arr2) {
+            while (cnt[n] > 0) {
+                ans[i] = n;
+                cnt[n]--;
+                i++;
             }
         }
-        return arr1;
+        
+        // Step 4: Place remaining elements (not in arr2) in ascending order
+        for (int j = 0; j < cnt.length; j++) {
+            while (cnt[j] > 0) {
+                ans[i] = j;
+                cnt[j]--;
+                i++;
+            }
+        }
+        
+        return ans;
     }
 }
