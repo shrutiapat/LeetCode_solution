@@ -1,18 +1,23 @@
 class Solution {
-public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        unordered_map<int, int> cnt;
-        for (auto num : nums) cnt[num]++;
-        for (auto kv : cnt) {
-            pq.push({kv.second, kv.first});
-            while (pq.size() > k) pq.pop();
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for(int num: nums){
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0)+1);
         }
-        vector<int> res;
-        while (!pq.empty()) {
-            res.push_back(pq.top().second);
-            pq.pop();
+        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+            (a,b)-> a.getValue() - b.getValue()
+        );
+
+        for(Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()){
+            minHeap.add(entry);
+            if (minHeap.size() > k) {
+                minHeap.poll(); 
+            }
+        }
+        int res[] = new int[k];
+        for(int i = k-1 ; i >= 0; i--){
+            res[i] = minHeap.poll().getKey();
         }
         return res;
     }
-};
+}
