@@ -15,50 +15,24 @@ class Node {
 
 class Solution {
     public Node copyRandomList(Node head) {
-        if(head==null)
-    {
-        return null;
-    }
-    //step 1 : create a new node for each nod ein the original list and interweave them
-    Node current = head;
-    while(current!=null)
-    {
-        Node copy = new Node(current.val);
-        copy.next=current.next;
-        current.next=copy;
-        current=copy.next;
-    }
-   
-   //step2 : set the random pointers for new nodes.
-
-   current=head;
-   while(current!=null)
-   {
-    Node copy = current.next;
-    copy.random = (current.random!=null) ? current.random.next : null;
-    current = copy.next;
-   }
-
-   //step 3 : separate the original and copy list
-
-Node original = head;
-Node copyHead = head.next;
-Node copy = copyHead;
-while(original!=null)
-{
-    original.next = copy.next;
-    original=original.next;
-
-    if(original!=null)
-    {
-        copy.next = original.next;
-        copy = copy.next;
-    }
-}
-copy.next=null;
-
-return copyHead;
-
-
+        Node current = head;
+        Node copyHead = (current != null) ? new Node(current.val) : null;
+        Node copyCurrent = copyHead;
+        Map<Node, Node> hash = new HashMap();
+        while(current != null)
+        {
+            hash.put(current, copyCurrent);
+            copyCurrent.random = current.random;
+            copyCurrent.next = (current.next != null) ? new Node(current.next.val) : null;
+            current = current.next;
+            copyCurrent = copyCurrent.next;
+        }
+        copyCurrent = copyHead;
+        while(copyCurrent != null)
+        {
+            copyCurrent.random = hash.get(copyCurrent.random);
+            copyCurrent = copyCurrent.next;
+        }
+        return copyHead;
     }
 }
