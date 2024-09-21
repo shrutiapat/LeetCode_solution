@@ -1,31 +1,32 @@
 class Solution {
     public List<List<String>> partition(String s) {
-        List<List<String>> res = new ArrayList<>(); 
-        List<String> path = new ArrayList<>(); 
-        helper(0, s, path, res);
-        return res;
+        List<List<String>> list = new ArrayList<>();
+        partitionUtil(s, 0 ,new ArrayList<String>(), list);
+        return list;
     }
-    
-    public void helper(int index, String s, List<String> path, List<List<String>> res){
-       
-        if(index == s.length()){
-            res.add(new ArrayList<>(path));
-            return;
+
+    void partitionUtil(String s, int index, ArrayList<String> tempList, List<List<String>> list){
+        if (index >= s.length()) {
+            list.add(new ArrayList<>(tempList));
         }
-        
-        for(int i = index; i < s.length(); i++){
-            if(isPalindrome(s, index, i)){ 
-                path.add(s.substring(index, i + 1)); 
-                helper(i + 1, s, path, res); 
-                path.remove(path.size() - 1); 
-                
+
+        for (int i=index+1;i<=s.length();i++)
+        {
+            String tempString = s.substring(index, i);
+            if (palidrone(tempString)) {
+                tempList.add(tempString);
+                partitionUtil(s, i, tempList, list);
+                tempList.remove(tempList.size()-1);
             }
         }
-    } 
-    
-    public boolean isPalindrome(String s, int start, int end){ 
-        while(start <= end){
-            if(s.charAt(start++) != s.charAt(end--)) return false;
+    }
+
+    boolean palidrone(String s){
+        int index = 0 ;
+        while (index < s.length()/2)
+        {
+            if (s.charAt(index) != s.charAt(s.length()-index-1)) return false;
+            index++;
         }
         return true;
     }
