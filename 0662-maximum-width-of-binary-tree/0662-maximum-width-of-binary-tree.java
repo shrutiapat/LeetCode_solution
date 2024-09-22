@@ -1,43 +1,51 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
-    public int widthOfBinaryTree(TreeNode root) {
-        int max=-1;
-        Deque<Pair> q = new ArrayDeque<>();
-        q.offer(new Pair(root,0));
-        while(!q.isEmpty()){
-            int first = q.peek().pos;
-            int last = q.peekLast().pos;
-            max=Math.max(max,last-first+1);
-            int size=q.size();
-            while(size!=0){
-                Pair p = q.pop();
-                if(p.node.left!=null) q.offer(new Pair(p.node.left,(p.pos-first)*2+1));
-                if(p.node.right!=null) q.offer(new Pair(p.node.right,(p.pos-first)*2+2));
-                size--;
-            }
+    class Pair{
+        public TreeNode node;
+        public int offset = 0;
+        public Pair(TreeNode n){
+            this.node = n;
         }
-        return max;
+        public Pair(TreeNode n, int offs){
+            this.node = n;
+            this.offset = offs;
+        }
     }
-}
-class Pair{
-    TreeNode node;
-    int pos;
-    public Pair(TreeNode node,int pos){
-        this.node = node;
-        this.pos = pos;
+    
+    public int widthOfBinaryTree(TreeNode root) {
+        LinkedList<Pair> queue = new LinkedList<>();
+        queue.addFirst(new Pair(root));
+        int maxWidth = 0;
+
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            int min = 0;
+            int max = 0;
+            for(int i = 0; i < size; i++){
+                Pair p = queue.removeLast();
+                int idx = p.offset;
+
+                if(i == 0){
+                    min = idx;
+                }
+
+                if(i == size-1){
+                    max = idx;
+                }
+                
+                if(null != p.node.left){
+                    queue.addFirst(new Pair(p.node.left, idx*2+1));
+                }
+
+                if(null != p.node.right){
+                    queue.addFirst(new Pair(p.node.right, idx*2+2));
+                }
+
+
+            }
+            maxWidth = Math.max(maxWidth, max-min+1);
+        }
+            
+        return maxWidth;
     }
+
 }
