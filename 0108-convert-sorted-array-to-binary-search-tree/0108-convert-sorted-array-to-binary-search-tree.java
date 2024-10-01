@@ -14,22 +14,20 @@
  * }
  */
 class Solution {
-    public TreeNode sortedArrayToBST(int[] nums) {
-        return binarySearchTree(nums, 0, nums.length-1);
-    }
 
-    private TreeNode binarySearchTree(int[] nums, int start, int end) {
-        if(start > end) {
+    private TreeNode helper(int[] nums, int s, int e){
+        if(s > e)
             return null;
-        }
-
-        int mid = start + (end - start)/2;
-
-        TreeNode root = new TreeNode(nums[mid]);
-
-        root.left = binarySearchTree(nums, start, mid-1);
-        root.right = binarySearchTree(nums, mid+1, end);
-
-        return root;
+        int mid = s + (e - s) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = helper(nums, s, mid - 1);
+        node.right = helper(nums, mid + 1, e);
+        return node;
+    }
+    public TreeNode sortedArrayToBST(int[] nums) {
+        int n = nums.length;
+        if(n == 0)
+            return null;
+        return helper(nums, 0, n - 1);
     }
 }
