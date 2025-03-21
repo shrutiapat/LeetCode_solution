@@ -10,24 +10,29 @@
  */
 class Solution {
     public void reorderList(ListNode head) {
-        ListNode [] left =  new ListNode[1];
-        left[0]  =  head;
-        reorder(left,head);
+        ListNode fast = head, slow = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode cur = slow.next;
+        slow.next = null;
+        ListNode prev = null;
+        while(cur != null){
+            ListNode temp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        cur = head;
+
+        while(prev != null){
+            ListNode temp = prev.next;
+            prev.next = cur.next;
+            cur.next = prev;
+            cur = prev.next;
+            prev = temp;
+        }
         
-    }
-     public void reorder(ListNode left[],ListNode right){
-        if(right==null){
-            return ;
-        }
-        reorder(left,right.next); 
-        if(left[0].next!=null){
-            ListNode leftNext =  left[0].next;
-            left[0].next =  right;
-            right.next =  leftNext;
-            left[0] =  leftNext;            
-        }
-        if(left[0].next == right){
-            left[0].next =  null;
-        }                        
     }
 }
